@@ -1,0 +1,19 @@
+{
+  "name": "ai-fitness-tracker",
+  "version": "1.0.0",
+  "description": "AI-powered Fitness Tracker with personalized diet & workout plans",
+  "main": "frontend/index.html",
+  "scripts": {
+    "start": "cd backend && python app.py",
+    "dev": "./run.sh"
+  },
+  "keywords": [
+    "fitness",
+    "diet",
+    "workout",
+    "health",
+    "ai"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

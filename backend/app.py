@@ -1,10 +1,12 @@
 import pandas as pd
+from flask import Flask, send_from_directory, request, jsonify
 import os
-from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
 # ---------- LOAD DATASET ----------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -26,15 +28,17 @@ nutrition_df = nutrition_df.dropna()
 
 print("Loaded columns:", nutrition_df.columns)
 print("Total foods:", len(nutrition_df))
-1. 
-
 
 L = {"sets": 4, "reps": "8–12", "rest": "60–90 sec"}
+
 # ---------- ROOT ----------
 @app.route("/")
-def index():
-    return "AI Fitness Backend Running"
+def serve_frontend():
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
+@app.route("/<path:path>")
+def serve_static_files(path):
+    return send_from_directory(FRONTEND_DIR, path)
 # ---------- HOME ----------
 @app.route("/home", methods=["POST"])
 def home():
@@ -181,7 +185,125 @@ def workout():
     goal = request.json.get("goal", "").lower().replace(" ", "_")
 
     plans = {
-
+        "weight_loss": [
+            {
+                "day": "Monday",
+                "focus": "Upper Body Cardio",
+                "exercises": [
+                    {"name": "Push Ups", "equipment": "Bodyweight", "sets": 3, "reps": "12–15", "rest": "45 sec"},
+                    {"name": "Jumping Jacks", "equipment": "Bodyweight", "sets": 3, "reps": "30 sec", "rest": "30 sec"},
+                    {"name": "Rows", "equipment": "Dumbbell", "sets": 3, "reps": "12–15", "rest": "45 sec"},
+                ],
+            },
+            {
+                "day": "Tuesday",
+                "focus": "Lower Body Cardio",
+                "exercises": [
+                    {"name": "Burpees", "equipment": "Bodyweight", "sets": 3, "reps": "10–12", "rest": "60 sec"},
+                    {"name": "Lunges", "equipment": "Bodyweight", "sets": 3, "reps": "15–20", "rest": "45 sec"},
+                    {"name": "High Knees", "equipment": "Bodyweight", "sets": 3, "reps": "30 sec", "rest": "30 sec"},
+                ],
+            },
+            {
+                "day": "Wednesday",
+                "focus": "Full Body",
+                "exercises": [
+                    {"name": "Plank", "equipment": "Bodyweight", "sets": 3, "reps": "45 sec", "rest": "30 sec"},
+                    {"name": "Mountain Climbers", "equipment": "Bodyweight", "sets": 3, "reps": "30 sec", "rest": "30 sec"},
+                    {"name": "Squats", "equipment": "Bodyweight", "sets": 3, "reps": "15–20", "rest": "45 sec"},
+                ],
+            },
+            {
+                "day": "Thursday",
+                "focus": "Cardio & Core",
+                "exercises": [
+                    {"name": "Jump Rope", "equipment": "Rope", "sets": 3, "reps": "1 min", "rest": "30 sec"},
+                    {"name": "Crunches", "equipment": "Bodyweight", "sets": 3, "reps": "20–25", "rest": "30 sec"},
+                    {"name": "Walking", "equipment": "Bodyweight", "sets": 1, "reps": "30 min", "rest": "-"},
+                ],
+            },
+            {
+                "day": "Friday",
+                "focus": "HIIT",
+                "exercises": [
+                    {"name": "Sprint", "equipment": "Bodyweight", "sets": 5, "reps": "20 sec", "rest": "40 sec"},
+                    {"name": "Rest", "equipment": "Bodyweight", "sets": 1, "reps": "5 min", "rest": "-"},
+                ],
+            },
+            {
+                "day": "Saturday",
+                "focus": "Light Activity",
+                "exercises": [
+                    {"name": "Yoga", "equipment": "Mat", "sets": 1, "reps": "30 min", "rest": "-"},
+                ],
+            },
+            {
+                "day": "Sunday",
+                "focus": "Rest",
+                "exercises": [
+                    {"name": "Stretching", "equipment": "Bodyweight", "sets": "-", "reps": "15 min", "rest": "-"},
+                ],
+            },
+        ],
+        "maintain": [
+            {
+                "day": "Monday",
+                "focus": "Upper Body",
+                "exercises": [
+                    {"name": "Push Ups", "equipment": "Bodyweight", "sets": 3, "reps": "10–12", "rest": "60 sec"},
+                    {"name": "Dumbbell Press", "equipment": "Dumbbell", "sets": 3, "reps": "10–12", "rest": "60 sec"},
+                    {"name": "Rows", "equipment": "Dumbbell", "sets": 3, "reps": "10–12", "rest": "60 sec"},
+                ],
+            },
+            {
+                "day": "Tuesday",
+                "focus": "Lower Body",
+                "exercises": [
+                    {"name": "Squats", "equipment": "Bodyweight", "sets": 3, "reps": "10–12", "rest": "60 sec"},
+                    {"name": "Leg Press", "equipment": "Machine", "sets": 3, "reps": "10–12", "rest": "60 sec"},
+                    {"name": "Calf Raises", "equipment": "Bodyweight", "sets": 3, "reps": "12–15", "rest": "45 sec"},
+                ],
+            },
+            {
+                "day": "Wednesday",
+                "focus": "Cardio",
+                "exercises": [
+                    {"name": "Running", "equipment": "Bodyweight", "sets": 1, "reps": "20–30 min", "rest": "-"},
+                    {"name": "Stretching", "equipment": "Mat", "sets": 1, "reps": "10 min", "rest": "-"},
+                ],
+            },
+            {
+                "day": "Thursday",
+                "focus": "Full Body",
+                "exercises": [
+                    {"name": "Burpees", "equipment": "Bodyweight", "sets": 3, "reps": "8–10", "rest": "60 sec"},
+                    {"name": "Plank", "equipment": "Bodyweight", "sets": 3, "reps": "45 sec", "rest": "30 sec"},
+                    {"name": "Lunges", "equipment": "Bodyweight", "sets": 3, "reps": "10–12", "rest": "60 sec"},
+                ],
+            },
+            {
+                "day": "Friday",
+                "focus": "Core",
+                "exercises": [
+                    {"name": "Plank", "equipment": "Bodyweight", "sets": 3, "reps": "60 sec", "rest": "30 sec"},
+                    {"name": "Crunches", "equipment": "Bodyweight", "sets": 3, "reps": "20–25", "rest": "30 sec"},
+                ],
+            },
+            {
+                "day": "Saturday",
+                "focus": "Active Recovery",
+                "exercises": [
+                    {"name": "Walking", "equipment": "Bodyweight", "sets": 1, "reps": "30 min", "rest": "-"},
+                ],
+            },
+            {
+                "day": "Sunday",
+                "focus": "Rest",
+                "exercises": [
+                    {"name": "Meditation", "equipment": "Mat", "sets": "-", "reps": "15 min", "rest": "-"},
+                ],
+            },
+        ],
         "muscle_gain": [
             {
                 "day": "Monday",
@@ -279,7 +401,6 @@ def supplements():
                 "link": "https://hyugalife.com/search?q=bcaa"
             }
         ],
-
         "weight_loss": [
             {
                 "name": "Whey Protein (Low Carb)",
@@ -306,7 +427,32 @@ def supplements():
                 "link": "https://hyugalife.com/search?q=multivitamin"
             }
         ],
-
+        "maintain": [
+            {
+                "name": "Multivitamin",
+                "reason": "Supports overall health and wellness",
+                "dosage": "1 tablet daily",
+                "timing": "Morning with breakfast",
+                "warning": "Check expiry date",
+                "link": "https://hyugalife.com/search?q=multivitamin"
+            },
+            {
+                "name": "Omega-3 Fish Oil",
+                "reason": "Improves heart and joint health",
+                "dosage": "1–2 capsules",
+                "timing": "With meals",
+                "warning": "May cause fish aftertaste",
+                "link": "https://hyugalife.com/search?q=fish+oil"
+            },
+            {
+                "name": "Vitamin D3",
+                "reason": "Supports bone health and immunity",
+                "dosage": "1000–2000 IU",
+                "timing": "Morning",
+                "warning": "Don't exceed 4000 IU daily",
+                "link": "https://hyugalife.com/search?q=vitamin+d3"
+            }
+        ],
         "weight_gain": [
             {
                 "name": "Mass Gainer",

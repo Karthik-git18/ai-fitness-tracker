@@ -1,11 +1,18 @@
-const API = "http://localhost:5000";
+const API = "http://127.0.0.1:5000";
 
 let user = JSON.parse(localStorage.getItem("userProfile"));
 let onboarded = localStorage.getItem("onboardingCompleted") === "true";
-window.onload = () => {
-  user = JSON.parse(localStorage.getItem("userProfile"));
-  onboarded = localStorage.getItem("onboardingCompleted") === "true";
 
+// Premium Features - Streak & Stats
+let stats = JSON.parse(localStorage.getItem("userStats")) || {
+  streak: 0,
+  totalWorkouts: 0,
+  totalCalories: 0,
+  joinDate: new Date().toISOString(),
+  achievements: []
+};
+
+window.onload = () => {
   if (!onboarded || !user) {
     document.getElementById("onboarding").style.display = "block";
     document.getElementById("dashboard").style.display = "none";
@@ -14,77 +21,46 @@ window.onload = () => {
     document.getElementById("onboarding").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
     document.querySelector("nav").style.display = "flex";
+    updateStreak();
     tab("home");
   }
 };
-function isProfileComplete(u) {
-  return (
-    u &&
-    u.name &&
-    u.age &&
-    u.weight &&
-    u.height &&
-    u.goal
-  );
-}
 
-/* ---------- UI CONTROL ---------- */
-function showProfileForm() {
-  document.getElementById("profileSetupForm").style.display = "block";
-  document.getElementById("dashboard").style.display = "none";
-}
-
-function showDashboard() {
-     if (!user) {
-    alert("Please complete onboarding first");
-    return;
-  }
-
-  document.getElementById("profileSetupForm").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
-  tab("home");
-}
-
-/* ---------- TAB SWITCH ---------- */
 function tab(id) {
   document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
   document.getElementById(id).style.display = "block";
-
   if (id === "home") loadHome();
   if (id === "diet") loadDiet();
+  if (id === "profile") loadProfile();
   if (id === "workout") loadWorkout();
   if (id === "supplements") loadSupplements();
-  if (id === "tips")loadTips();
-  if (id === "profile") loadProfile();
-
+  if (id === "tips") loadTips();
 }
 
-/* ---------ON BOARDING ---------- */
+/* ---------- ONBOARDING ---------- */
 function completeOnboarding() {
-  const name = document.getElementById("obName").value.trim();
-  const age = Number(document.getElementById("obAge").value);
-  const weight = Number(document.getElementById("obWeight").value);
-  const height = Number(document.getElementById("obHeight").value);
-  const gender = document.getElementById("obGender").value;
-  const goal = document.getElementById("obGoal").value;
+  const name = obName.value.trim();
+  const age = Number(obAge.value);
+  const weight = Number(obWeight.value);
+  const height = Number(obHeight.value);
+  const gender = obGender.value;
+  const goal = obGoal.value;
 
   if (!name || !age || !weight || !height || !gender || !goal) {
-    alert("Please fill all details");
+    alert("Fill all details");
     return;
   }
 
   user = { name, age, weight, height, gender, goal };
-
   localStorage.setItem("userProfile", JSON.stringify(user));
-  localStorage.setItem("onboardingCompleted", "true"); // 🔥 ADD THIS
+  localStorage.setItem("onboardingCompleted", "true");
 
-  // UI switch
   document.getElementById("onboarding").style.display = "none";
-  document.querySelector("nav").style.display = "flex";
   document.getElementById("dashboard").style.display = "block";
-
+  document.querySelector("nav").style.display = "flex";
   tab("home");
 }
+
 
 /* ---------- SAVE PROFILE ---------- */
 function loadProfile() {
@@ -161,20 +137,21 @@ async function loadHome() {
 
   const data = await res.json();
 
+  // Show Streak Badge
+  const streakBadge = document.querySelector(".section-title");
+  if (streakBadge) {
+    streakBadge.innerHTML = `🏠 Daily Overview - ${getStreakBadge()} (${stats.streak} day${stats.streak !== 1 ? 's' : ''})`;
+  }
+
   // TEXT VALUES
   document.getElementById("calText").innerText = data.calories;
   document.getElementById("proText").innerText = data.protein;
   document.getElementById("waterText").innerText = data.water;
 
-  // RING VISUALS
-  document.getElementById("calRing").style.background =
-    `conic-gradient(#4f46e5 ${(data.calories / 3000) * 360}deg, #e5e7eb 0deg)`;
-
-  document.getElementById("proRing").style.background =
-    `conic-gradient(#22c55e ${(data.protein / 200) * 360}deg, #e5e7eb 0deg)`;
-
-  document.getElementById("waterRing").style.background =
-    `conic-gradient(#06b6d4 ${(data.water / 4) * 360}deg, #e5e7eb 0deg)`;
+  // RING SHADOWS & EFFECTS (Gradients are in CSS)
+  document.getElementById("calRing").style.boxShadow = "0 12px 30px rgba(99, 102, 241, 0.3)";
+  document.getElementById("proRing").style.boxShadow = "0 12px 30px rgba(16, 185, 129, 0.3)";
+  document.getElementById("waterRing").style.boxShadow = "0 12px 30px rgba(6, 182, 212, 0.3)";
 
   // WEEKLY WORKOUT
   const list = document.getElementById("weeklyWorkout");
@@ -225,6 +202,61 @@ function saveProfile() {
   localStorage.setItem("userProfile", JSON.stringify(user));
   tab("diet");   // 🔥 important
 }
+
+function resetProfile() {
+  if (confirm("Are you sure you want to reset your profile?")) {
+    localStorage.removeItem("userProfile");
+    localStorage.removeItem("onboardingCompleted");
+    localStorage.removeItem("profilePhoto");
+    localStorage.removeItem("userStats");
+    location.reload();
+  }
+}
+
+// ===== PREMIUM FEATURES =====
+function updateStreak() {
+  const today = new Date().toDateString();
+  const lastActive = localStorage.getItem("lastActive");
+  
+  if (lastActive !== today) {
+    stats.streak += 1;
+    stats.totalWorkouts += 1;
+    localStorage.setItem("lastActive", today);
+    localStorage.setItem("userStats", JSON.stringify(stats));
+    
+    if (stats.streak % 7 === 0) {
+      showAchievement(`🏆 ${stats.streak} Day Streak!`);
+    }
+  }
+}
+
+function showAchievement(message) {
+  const div = document.createElement("div");
+  div.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    z-index: 9999;
+    animation: slideInRight 0.5s ease;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+  `;
+  div.innerText = message;
+  document.body.appendChild(div);
+  
+  setTimeout(() => div.remove(), 3000);
+}
+
+function getStreakBadge() {
+  if (stats.streak >= 30) return "🔥 Legend";
+  if (stats.streak >= 7) return "⭐ Star";
+  if (stats.streak >= 3) return "🌟 Rising";
+  return "🆕 Beginner";
+}
 /* ---------- FOOD SCAN ---------- */
 async function scanFood() {
   const food = document.getElementById("scanFoodInput").value.trim();
@@ -238,7 +270,7 @@ async function scanFood() {
   resultDiv.innerHTML = "Scanning...";
 
   try {
-    const res = await fetch("http://127.0.0.1:5000/scan-food", {
+   const res = await fetch(`${API}/scan-food`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
