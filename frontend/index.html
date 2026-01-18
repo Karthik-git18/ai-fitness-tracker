@@ -1,52 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Fitness Tracker</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>AI Fitness</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<!-- ================= ONBOARDING ================= -->
-<section id="onboarding" class="card">
-  <h2>Welcome! Tell us about you</h2>
 
-  <input id="obName" placeholder="Name">
-  <input id="obAge" type="number" placeholder="Age">
-  <input id="obWeight" type="number" placeholder="Weight (kg)">
-  <input id="obHeight" type="number" placeholder="Height (cm)">
+<!-- ================= WELCOME SCREEN ================= -->
+<div id="welcomeScreen" class="welcome-screen">
+  <div class="ai-bg"></div>
+  <div class="welcome-content">
+    <h1 class="welcome-title">
+      Welcome to <span>AI Fitness</span>
+    </h1>
+    <p class="welcome-sub">
+      Train smarter • Eat better • Live stronger
+    </p>
+    <button class="welcome-btn" onclick="startApp()">Get Started →</button>
+  </div>
+</div>
+
+<!-- ================= ONBOARDING ================= -->
+<section id="onboarding" class="card" style="display:none">
+  <h2>Tell us about you</h2>
+
+  <input id="obName" placeholder="Name" />
+  <input id="obAge" type="number" placeholder="Age" />
+  <input id="obWeight" type="number" placeholder="Weight (kg)" />
+  <input id="obHeight" type="number" placeholder="Height (cm)" />
 
   <select id="obGender">
-    <option value="">Select Gender</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
+    <option value="">Gender</option>
+    <option>Male</option>
+    <option>Female</option>
   </select>
 
   <select id="obGoal">
-    <option value="">Select Goal</option>
-    <option value="Weight Loss">Weight Loss</option>
-    <option value="Maintain">Maintain</option>
-    <option value="Muscle Gain">Muscle Gain</option>
+    <option value="">Goal</option>
+    <option>Weight Loss</option>
+    <option>Maintain</option>
+    <option>Muscle Gain</option>
   </select>
 
   <button onclick="completeOnboarding()">Continue</button>
 </section>
-
-<!-- ================= DASHBOARD WRAPPER ================= -->
-<div id="dashboard" style="display:none">
-
 <!-- ================= NAV ================= -->
-<nav style="display:none">
+<nav>
   <button onclick="tab('home')">Home</button>
   <button onclick="tab('diet')">Diet</button>
-  <button onclick="tab('scan')">Scan</button>
   <button onclick="tab('workout')">Workout</button>
   <button onclick="tab('supplements')">Supplements</button>
+  <button onclick="tab('scan')">Scan</button>
   <button onclick="tab('tips')">Tips</button>
   <button onclick="tab('ai')">AI Chat</button>
   <button onclick="tab('profile')">Profile</button>
 </nav>
+
+<!-- ================= DASHBOARD ================= -->
+<div id="dashboard" style="display:none">
 
 <!-- ================= PROFILE (FIRST SCREEN) ================= -->
 <section id="profile" class="tab">
@@ -113,29 +128,71 @@
 
 <!-- ================= HOME ================= -->
 <section id="home" class="tab">
+
   <h2>Daily Overview</h2>
 
-  <div class="rings">
-    <div class="ring" id="calRing">
-      <span id="calText"></span>
-      <p>Calories</p>
+ <div class="rings">
+  <div class="ring calories">
+    <span>1601</span>
+    <p>Calories</p>
+  </div>
+
+  <div class="ring protein">
+    <span>126g</span>
+    <p>Protein (g)</p>
+  </div>
+
+  <div class="ring water">
+    <span>2.3L</span>
+    <p>Water (L)</p>
+  </div>
+</div>
+
+  <!-- ===== WEEKLY WORKOUT CARD (INSIDE HOME ✅) ===== -->
+  <div class="weekly-workout-card">
+    <h3>🏋️ Weekly Workout Plan</h3>
+    <ul id="homeWorkoutList"></ul>
+  </div>
+
+  <h3>🏆 Weekly Achievements</h3>
+
+  <div class="achievement-grid">
+    <div class="achievement-card">
+      <span>🔥</span>
+      <h4>Calories Goal</h4>
+      <p>5 / 7 days</p>
     </div>
 
-    <div class="ring" id="proRing">
-      <span id="proText"></span>
-      <p>Protein (g)</p>
+    <div class="achievement-card">
+      <span>💪</span>
+      <h4>Protein Intake</h4>
+      <p>120g avg</p>
     </div>
 
-    <div class="ring" id="waterRing">
-      <span id="waterText"></span>
-      <p>Water (L)</p>
+    <div class="achievement-card">
+      <span>💧</span>
+      <h4>Hydration</h4>
+      <p>3.2L / day</p>
+    </div>
+
+    <div class="achievement-card locked">
+      <span>👑</span>
+      <h4>Streak Pro</h4>
+      <p>Premium</p>
     </div>
   </div>
 
-  <h3>Weekly Workout Plan</h3>
-  <ul id="weeklyWorkout"></ul>
-</section>
+  <div class="progress-block">
+    <p>🎯 Weekly Progress</p>
 
+    <div class="progress-bar">
+      <div style="width: 72%"></div>
+    </div>
+
+    <small>72% goals completed</small>
+  </div>
+
+</section>
 <!-- ================= DIET ================= -->
 <section id="diet" class="tab">
 
@@ -192,16 +249,32 @@
 
 </section>
 
+<!-- ================= SCAN TAB ================= -->
+<section id="scan" class="tab">
+  <h2 class="scan-title">📸 Smart Scan</h2>
+  <p class="scan-subtitle">
+    Scan food, supplements, or workouts using AI
+  </p>
+
+  <div class="scan-card">
+    <button class="scan-btn">📷 Scan Now</button>
+    <p class="scan-hint">
+      Upload an image to get instant AI analysis
+    </p>
+  </div>
+</section>
+
 
 <!-- ================= TIPS TAB ================= -->
 <section id="tips" class="tab">
   <h2 class="tips-title">🔥 Explore Fitness Tips</h2>
   <p class="tips-subtitle">Expert-curated tips to improve your health</p>
 
-  <!-- REQUIRED -->
   <div id="tipsContainer" class="tips-container"></div>
 </section>
 
+<!-- Link JS at END -->
+<script src="script.js"></script>
 <!-- ================= AI CHAT ================= -->
 <section id="ai" class="tab">
 

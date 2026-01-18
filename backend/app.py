@@ -87,6 +87,7 @@ def home():
         "bmi": bmi,
         "weekly_workout": weekly_workout
     })
+
 # ---------------- CALC TARGETS ----------------
 def calculate_targets(user):
     weight = user["weight"]
@@ -538,4 +539,4 @@ def ai_chat():
 
 # ---------- RUN ----------
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)

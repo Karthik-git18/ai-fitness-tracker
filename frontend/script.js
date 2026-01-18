@@ -1,67 +1,86 @@
 const API = "https://ai-fitness-tracker-6pmo.onrender.com";
 
 let user = JSON.parse(localStorage.getItem("userProfile"));
-let onboarded = localStorage.getItem("onboardingCompleted") === "true";
-
-// Premium Features - Streak & Stats
-let stats = JSON.parse(localStorage.getItem("userStats")) || {
-  streak: 0,
-  totalWorkouts: 0,
-  totalCalories: 0,
-  joinDate: new Date().toISOString(),
-  achievements: []
-};
+let appState = localStorage.getItem("appState") || "welcome";
 
 window.onload = () => {
-  if (!onboarded || !user) {
-    document.getElementById("onboarding").style.display = "block";
-    document.getElementById("dashboard").style.display = "none";
-    document.querySelector("nav").style.display = "none";
-  } else {
-    document.getElementById("onboarding").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-    document.querySelector("nav").style.display = "flex";
-    updateStreak();
-    tab("home");
-  }
+  hideAll();
+
+  if (appState === "welcome") showWelcome();
+  else if (appState === "onboarding") showOnboarding();
+  else if (appState === "dashboard" && user) showDashboard();
+  else showWelcome();
 };
 
-function tab(id) {
-  document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
-  document.getElementById(id).style.display = "block";
-  if (id === "home") loadHome();
-  if (id === "diet") loadDiet();
-  if (id === "profile") loadProfile();
-  if (id === "workout") loadWorkout();
-  if (id === "supplements") loadSupplements();
-  if (id === "tips") loadTips();
+/* ===== SCREEN CONTROLS ===== */
+
+function hideAll() {
+  document.getElementById("welcomeScreen").style.display = "none";
+  document.getElementById("onboarding").style.display = "none";
+  document.getElementById("dashboard").style.display = "none";
+  document.querySelector("nav").style.display = "none";
 }
 
-/* ---------- ONBOARDING ---------- */
-function completeOnboarding() {
-  const name = obName.value.trim();
-  const age = Number(obAge.value);
-  const weight = Number(obWeight.value);
-  const height = Number(obHeight.value);
-  const gender = obGender.value;
-  const goal = obGoal.value;
+function showWelcome() {
+  hideAll();
+  document.getElementById("welcomeScreen").style.display = "flex";
+}
 
-  if (!name || !age || !weight || !height || !gender || !goal) {
-    alert("Fill all details");
-    return;
-  }
+function showOnboarding() {
+  hideAll();
+  document.getElementById("onboarding").style.display = "block";
+}
 
-  user = { name, age, weight, height, gender, goal };
-  localStorage.setItem("userProfile", JSON.stringify(user));
-  localStorage.setItem("onboardingCompleted", "true");
-
-  document.getElementById("onboarding").style.display = "none";
+function showDashboard() {
+  hideAll();
   document.getElementById("dashboard").style.display = "block";
   document.querySelector("nav").style.display = "flex";
   tab("home");
 }
 
+/* ===== WELCOME ACTION ===== */
 
+function startApp() {
+  localStorage.setItem("appState", "onboarding");
+  showOnboarding();
+}
+
+/* ===== ONBOARDING ===== */
+
+function completeOnboarding() {
+  const name = obName.value.trim();
+  const age = +obAge.value;
+  const weight = +obWeight.value;
+  const height = +obHeight.value;
+  const gender = obGender.value;
+  const goal = obGoal.value;
+
+  if (!name || !age || !weight || !height || !gender || !goal) {
+    alert("Please fill all details");
+    return;
+  }
+
+  user = { name, age, weight, height, gender, goal };
+  localStorage.setItem("userProfile", JSON.stringify(user));
+  localStorage.setItem("appState", "dashboard");
+
+  showDashboard();
+}
+
+/* ===== TABS ===== */
+
+function tab(id) {
+  document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
+  document.getElementById(id).style.display = "block";
+
+  if (id === "home") loadHome();
+  if (id === "diet") loadDiet();
+  if (id === "workout") loadWorkout();
+  if (id === "supplements") loadSupplements();
+  if (id === "scan") loadScan();
+  if (id === "tips") loadTips();
+  if (id === "profile") loadProfile();
+}
 /* ---------- SAVE PROFILE ---------- */
 function loadProfile() {
   if (!user) return;
@@ -127,7 +146,7 @@ function drawChart() {
 }
 drawChart();
 
-/* ----------HOME TAB ---------- */
+/* ---------- HOME TAB ---------- */
 async function loadHome() {
   const res = await fetch(`${API}/home`, {
     method: "POST",
@@ -137,29 +156,55 @@ async function loadHome() {
 
   const data = await res.json();
 
-  // Show Streak Badge
-  const streakBadge = document.querySelector(".section-title");
-  if (streakBadge) {
-    streakBadge.innerHTML = `🏠 Daily Overview - ${getStreakBadge()} (${stats.streak} day${stats.streak !== 1 ? 's' : ''})`;
-  }
+  // ===== DAILY RINGS =====
+  document.getElementById("caloriesValue").innerText = data.calories;
+  document.getElementById("proteinValue").innerText = data.protein + "g";
+  document.getElementById("waterValue").innerText = data.water + "L";
 
-  // TEXT VALUES
-  document.getElementById("calText").innerText = data.calories;
-  document.getElementById("proText").innerText = data.protein;
-  document.getElementById("waterText").innerText = data.water;
+  // ===== WEEKLY WORKOUT (HOME CARD – GOAL BASED) =====
+  const HOME_WORKOUTS = {
+    "Weight Loss": [
+      ["Mon", "Cardio + Core"],
+      ["Tue", "Lower Body"],
+      ["Wed", "HIIT"],
+      ["Thu", "Upper Body"],
+      ["Fri", "Full Body"],
+      ["Sat", "Yoga / Walk"],
+      ["Sun", "Rest"],
+    ],
+    "Maintain": [
+      ["Mon", "Chest + Triceps"],
+      ["Tue", "Back + Biceps"],
+      ["Wed", "Cardio"],
+      ["Thu", "Legs"],
+      ["Fri", "Shoulders"],
+      ["Sat", "Full Body"],
+      ["Sun", "Rest"],
+    ],
+    "Muscle Gain": [
+      ["Mon", "Chest + Triceps"],
+      ["Tue", "Back + Biceps"],
+      ["Wed", "Legs"],
+      ["Thu", "Shoulders"],
+      ["Fri", "Arms"],
+      ["Sat", "Core"],
+      ["Sun", "Rest"],
+    ],
+  };
 
-  // RING SHADOWS & EFFECTS (Gradients are in CSS)
-  document.getElementById("calRing").style.boxShadow = "0 12px 30px rgba(99, 102, 241, 0.3)";
-  document.getElementById("proRing").style.boxShadow = "0 12px 30px rgba(16, 185, 129, 0.3)";
-  document.getElementById("waterRing").style.boxShadow = "0 12px 30px rgba(6, 182, 212, 0.3)";
+  const workoutList = document.getElementById("homeWorkoutList");
+  workoutList.innerHTML = "";
 
-  // WEEKLY WORKOUT
-  const list = document.getElementById("weeklyWorkout");
-  list.innerHTML = "";
-  data.weekly_workout.forEach(d => {
-    list.innerHTML += `<li>${d.day}: ${d.focus}</li>`;
+  (HOME_WORKOUTS[user.goal] || []).forEach((day, i) => {
+    workoutList.innerHTML += `
+      <li style="animation-delay:${i * 0.06}s">
+        <strong>${day[0]}</strong>
+        <span>${day[1]}</span>
+      </li>
+    `;
   });
 }
+
 /* ---------- DIET ---------- */
 async function loadDiet() {
   const res = await fetch(`${API}/diet`, {
@@ -364,60 +409,54 @@ async function loadSupplements() {
     `;
   });
 }
-/* ===== PREMIUM TIPS DATA ===== */
+console.log("✅ script.js loaded");
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ DOM loaded");
+  loadTips();
+});
+
 const TIPS = [
   {
     title: "🔥 Fat Loss Tip",
-    description:
-      "Focus on protein-rich meals and maintain a calorie deficit. Walk at least 7–10k steps daily.",
+    description: "Walk 7–10k steps daily and keep protein high.",
     tag: "Weight Loss",
   },
   {
     title: "💪 Muscle Gain Tip",
-    description:
-      "Progressive overload + enough protein (1.6–2.2g/kg bodyweight) is key to muscle growth.",
+    description: "Progressive overload + enough protein builds muscle.",
     tag: "Muscle Gain",
   },
   {
     title: "🥗 Diet Tip",
-    description:
-      "Include complex carbs like oats, rice, and fruits instead of refined sugar.",
+    description: "Choose complex carbs instead of refined sugar.",
     tag: "Nutrition",
   },
   {
     title: "🧠 Recovery Tip",
-    description:
-      "Sleep 7–9 hours daily. Muscle grows during recovery, not during workouts.",
+    description: "Sleep 7–9 hours daily for muscle recovery.",
     tag: "Recovery",
-  },
-  {
-    title: "🏃 Cardio Tip",
-    description:
-      "Low-intensity cardio (walking, cycling) burns fat without muscle loss.",
-    tag: "Cardio",
-  },
-  {
-    title: "💧 Hydration Tip",
-    description:
-      "Drink at least 3–4 liters of water daily for optimal performance.",
-    tag: "Hydration",
-  },
+  }
 ];
 
-/* ===== LOAD TIPS ===== */
 function loadTips() {
   const container = document.getElementById("tipsContainer");
-  if (!container) return;
+
+  if (!container) {
+    console.error("❌ tipsContainer not found");
+    return;
+  }
+
+  console.log("✅ tipsContainer found");
 
   container.innerHTML = "";
 
-  TIPS.forEach((tip, index) => {
+  TIPS.forEach((tip) => {
     const card = document.createElement("div");
     card.className = "tip-card";
-    card.style.animationDelay = `${index * 0.08}s`;
 
     card.innerHTML = `
-      <h3>${tip.title}</h3>
+      <h4>${tip.title}</h4>
       <p>${tip.description}</p>
       <span class="tip-tag">${tip.tag}</span>
     `;
@@ -495,3 +534,24 @@ document.addEventListener("DOMContentLoaded", () => {
     avatarIcon.style.display = "none";
   }
 });
+// ================= AI WELCOME LOGIC =================
+function enterApp() {
+  localStorage.setItem("welcomeSeen", "true");
+  document.getElementById("welcome").style.display = "none";
+  document.querySelector("nav").style.display = "none";
+  document.getElementById("onboarding").style.display = "block";
+}
+
+window.addEventListener("load", () => {
+  const seen = localStorage.getItem("welcomeSeen") === "true";
+
+  if (!seen) {
+    document.getElementById("welcome").style.display = "flex";
+    document.querySelector("nav").style.display = "none";
+    document.getElementById("onboarding").style.display = "none";
+  }
+});
+function startApp() {
+  document.getElementById("welcomeScreen").style.display = "none";
+  document.getElementById("onboarding").style.display = "block";
+}

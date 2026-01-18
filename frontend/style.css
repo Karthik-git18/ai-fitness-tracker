@@ -1,58 +1,131 @@
-/* ================= THEME VARIABLES ================= */
+/* ================= PREMIUM DESIGN SYSTEM ================= */
 :root {
-  --primary: #6366f1;
+  /* Brand Colors */
+  --primary: #6366f1;          /* Indigo */
   --primary-dark: #4f46e5;
-  --accent: #10b981;
-  --danger: #ef4444;
+  --secondary: #9333ea;        /* Purple */
+  --accent: #22c55e;           /* Green */
+
+  /* Status Colors */
+  --success: #16a34a;
   --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #0ea5e9;
+
+  /* Backgrounds */
   --bg: #f8fafc;
+  --bg-soft: #f1f5f9;
   --card: #ffffff;
+  --border: #e5e7eb;
+
+  /* Text */
   --text: #0f172a;
-  --text-muted: #6b7280;
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  --gradient-success: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --gradient-success: linear-gradient(135deg, #22c55e, #16a34a);
+  --gradient-dark: linear-gradient(135deg, #020617, #0f172a);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition: 0.25s ease;
 }
 
 /* ================= GLOBAL ================= */
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
   background: var(--bg);
   color: var(--text);
-  margin: 0;
-  padding: 0;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
 }
 
 /* ================= NAV ================= */
+/* ================= PREMIUM FLOATING NAVBAR ================= */
 nav {
-  background: var(--gradient-primary);
-  padding: 12px 20px;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  position: sticky;
+  top: 12px;
+  z-index: 1000;
+
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  justify-content: space-around;
+
+  margin: 12px;
+  padding: 10px 14px;
+
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  backdrop-filter: blur(12px);
+
+  border-radius: 18px;
+  box-shadow:
+    0 10px 25px rgba(99, 102, 241, 0.35),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+
   overflow-x: auto;
 }
 
+/* ================= NAV BUTTONS ================= */
 nav button {
-  color: white;
-  background: rgba(255,255,255,0.15);
-  border: 2px solid transparent;
-  padding: 8px 16px;
-  cursor: pointer;
-  border-radius: 8px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+
+  padding: 8px 18px;
   font-weight: 600;
   font-size: 14px;
-  transition: all 0.3s ease;
+
+  cursor: pointer;
   white-space: nowrap;
+
+  transition: all 0.3s ease;
 }
 
+/* ================= HOVER ================= */
 nav button:hover {
-  background: rgba(255,255,255,0.3);
-  border-color: rgba(255,255,255,0.5);
-  transform: translateY(-2px);
+  background: #ffffff;
+  color: #4f46e5;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+/* ================= ACTIVE TAB ================= */
+nav button.active {
+  background: #ffffff;
+  color: #4f46e5;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* ================= MOBILE SCROLL HIDE ================= */
+nav::-webkit-scrollbar {
+  display: none;
 }
 
 /* ================= CARDS ================= */
@@ -137,26 +210,6 @@ nav button:hover {
 }
 
 /* ================= PREMIUM HOME RINGS ================= */
-.rings {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 20px;
-  margin: 30px 0;
-  padding: 20px;
-}
-
-#calRing {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
-}
-
-#proRing {
-  background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%) !important;
-}
-
-#waterRing {
-  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important;
-}
-
 .ring {
   width: 140px;
   height: 140px;
@@ -165,26 +218,39 @@ nav button:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: rgb(243, 243, 243);
   font-weight: bold;
-  position: relative;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
-  font-size: 28px;
-  margin: 0 auto;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
 }
 
 .ring span {
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
 }
 
 .ring p {
-  font-size: 12px;
-  margin-top: 8px;
+  font-size: 13px;
+  margin-top: 6px;
   opacity: 0.95;
-  font-weight: 500;
 }
 
+/* COLORS */
+.ring.calories {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.ring.protein {
+  background: linear-gradient(135deg, #10b981, #14b8a6);
+}
+
+.ring.water {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+@media (max-width: 768px) {
+  .rings {
+    flex-direction: column;
+  }
+}
 /* ================= DIET CARDS ================= */
 .diet-summary {
   display: grid;
@@ -828,4 +894,837 @@ nav button:hover {
     padding: 6px 12px;
     font-size: 12px;
   }
+}
+/* ================= ACHIEVEMENTS (COMPACT PREMIUM) ================= */
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.achievement-card {
+  background: linear-gradient(145deg, #111827, #1f2937);
+  border-radius: 16px;
+
+  padding: 16px 14px;
+  height: 140px; /* 🔥 CONTROL SIZE */
+
+  text-align: center;
+  color: #f9fafb;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  box-shadow:
+    0 8px 22px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.achievement-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 14px 30px rgba(99,102,241,0.35);
+}
+
+/* ICON */
+.achievement-card span {
+  font-size: 28px; /* ⬇️ smaller */
+  margin-bottom: 6px;
+}
+
+/* TITLE */
+.achievement-card h4 {
+  margin: 4px 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* SUBTEXT */
+.achievement-card p {
+  font-size: 13px;
+  color: #c7d2fe;
+}
+
+/* LOCKED */
+.achievement-card.locked {
+  opacity: 0.55;
+  filter: grayscale(0.6);
+}
+@media (max-width: 768px) {
+  .achievement-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .achievement-card {
+    height: 130px;
+  }
+}
+/* ================= PROGRESS ================= */
+
+.progress-block {
+  margin: 28px 0;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #94a3b8;
+}
+
+.progress-bar {
+  background: #1e293b;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 14px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+}
+
+.progress-bar div {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--secondary)
+  );
+  border-radius: 999px;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+/* ================= APP ENTRY ANIMATION ================= */
+
+body {
+  animation: appFade 0.9s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes appFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================= CARD FADE-UP ================= */
+
+@keyframes fadeUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+/* ===== UNIVERSAL CARD ENTRY ===== */
+
+.card,
+.meal-card,
+.workout-day,
+.supplement-card {
+  opacity: 0;
+  animation: slideUpSoft 0.7s cubic-bezier(.4,0,.2,1) forwards;
+}
+
+@keyframes slideUpSoft {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+/* ================= AI FUTURISTIC WELCOME ================= */
+
+.welcome-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.ai-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(34,211,238,0.08) 0px,
+      transparent 1px,
+      transparent 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(124,58,237,0.08) 0px,
+      transparent 1px,
+      transparent 40px
+    );
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  from { transform: translateY(0); }
+  to { transform: translateY(40px); }
+}
+.welcome-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+.welcome-content {
+  position: relative;
+  text-align: center;
+  color: #e5e7eb;
+  animation: fadeUp 1s ease forwards;
+}
+
+.welcome-title {
+  font-size: 48px;
+  font-weight: 900;
+  margin-bottom: 14px;
+}
+
+.welcome-title span {
+  background: linear-gradient(90deg, #22d3ee, #7c3aed);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.welcome-sub {
+  font-size: 18px;
+  color: #94a3b8;
+  margin-bottom: 32px;
+}
+
+.welcome-btn {
+  padding: 14px 34px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22d3ee, #7c3aed);
+  border: none;
+  color: #020617;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.welcome-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(34,211,238,0.5);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
+/* ===== HOME WEEKLY WORKOUT CARD ===== */
+.weekly-workout-card {
+  background: #ffffff;
+  padding: 20px 24px;
+  border-radius: 18px;
+  margin: 30px 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.weekly-workout-card h3 {
+  margin-bottom: 14px;
+  color: var(--primary);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* LIST */
+.home-workout-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.home-workout-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px 14px;
+  margin-bottom: 10px;
+
+  background: linear-gradient(135deg, #f8fafc, #ffffff);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+
+  opacity: 0;
+  transform: translateY(14px);
+  animation: workoutFade 0.5s ease forwards;
+}
+
+.home-workout-list li strong {
+  color: #0f172a;
+}
+
+.home-workout-list li span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* Cult.fit style animation */
+@keyframes workoutFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ================= PREMIUM HOME BACKGROUND ================= */
+
+#home {
+  position: relative;
+  overflow: hidden;
+  background: #0b0f1a;
+}
+
+/* Background image layer */
+#home::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(11,15,26,0.85),
+      rgba(11,15,26,0.95)
+    ),
+    url("https://images.unsplash.com/photo-1571019613914-85f342c1d4f0");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+/* Soft animated premium glow */
+#home::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(99,102,241,0.18), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(16,185,129,0.15), transparent 45%);
+  animation: homeGlow 16s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes homeGlow {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* Bring content above background */
+#home > * {
+  position: relative;
+  z-index: 1;
+}
+/* Premium floating cards on home */
+#home .ring,
+#home .weekly-workout-card,
+#home .achievement-card,
+#home .progress-block {
+  background: rgba(15, 20, 40, 0.88);
+  backdrop-filter: saturate(120%);
+  border-radius: 18px;
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.65),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+#home .ring,
+#home .achievement-card,
+#home .weekly-workout-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+#home .ring:hover,
+#home .achievement-card:hover,
+#home .weekly-workout-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 35px 80px rgba(0,0,0,0.75);
+}
+/* ================= GLOBAL PREMIUM DARK THEME ================= */
+
+body {
+  background: radial-gradient(
+      circle at top left,
+      rgba(99,102,241,0.15),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(16,185,129,0.12),
+      transparent 45%
+    ),
+
+    linear-gradient(135deg, #060914, #0b1022 60%, #060914);
+  color: #e5e7eb;
+}
+.tab {
+  background: transparent;
+  min-height: 100vh;
+  padding: 32px;
+}
+.card,
+.weekly-workout-card,
+.achievement-card,
+.summary-card,
+.meal-card,
+.workout-day,
+.supplement-card,
+.tip-card,
+.profile-header,
+.profile-stats .stat-card,
+.progress-block {
+  background: linear-gradient(
+    180deg,
+    rgba(20,25,45,0.9),
+    rgba(10,15,30,0.9)
+  );
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.75),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  backdrop-filter: blur(6px);
+}
+nav {
+  background: linear-gradient(
+    135deg,
+    #1b1f3a,
+    #2b2f6a
+  );
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+nav button {
+  background: rgba(255,255,255,0.08);
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+nav button:hover {
+  background: rgba(99,102,241,0.35);
+}
+h1, h2, h3, h4 {
+  color: #c7d2fe;
+}
+
+p, small, span {
+  color: #cbd5f5;
+}
+/* ================= PROFILE HEADER ================= */
+
+.profile-header {
+  background: linear-gradient(
+    135deg,
+    rgba(25,30,60,0.9),
+    rgba(10,15,35,0.95)
+  );
+  border-radius: 22px;
+  padding: 26px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 4px rgba(99,102,241,0.25),
+    0 15px 40px rgba(99,102,241,0.6);
+}
+
+#avatarIcon {
+  font-size: 30px;
+  color: white;
+}
+.goal-badge {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ecfdf5;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(34,197,94,0.45);
+}
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.profile-stats .stat-card {
+  background: linear-gradient(
+    180deg,
+    rgba(20,25,45,0.95),
+    rgba(10,15,30,0.95)
+  );
+  border-radius: 18px;
+  padding: 18px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow:
+    0 25px 70px rgba(0,0,0,0.8);
+}
+
+.profile-stats h4 {
+  color: #9ca3af;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.profile-stats span {
+  color: #c7d2fe;
+  font-size: 22px;
+  font-weight: 800;
+}
+.profile-edit {
+  background: linear-gradient(
+    180deg,
+    rgba(18,22,45,0.95),
+    rgba(10,14,30,0.98)
+  );
+  border-radius: 22px;
+  padding: 28px;
+  margin-top: 28px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 40px 100px rgba(0,0,0,0.85);
+}
+
+.profile-edit h3 {
+  color: #c7d2fe;
+  margin
+  .profile-edit input,
+.profile-edit select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.profile-edit input:focus,
+.profile-edit select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.3);
+}-bottom: 18px;
+}
+.save-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-weight: 700;
+  color: white;
+  margin-top: 14px;
+  box-shadow:
+    0 12px 30px rgba(99,102,241,0.6);
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 45px rgba(99,102,241,0.75);
+}
+/* ================= HERO VIDEO BASE ================= */
+
+.video-bg {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: #050b1a;
+}
+
+/* ================= VIDEO POWER MOTION ================= */
+
+.video-bg video {
+  position: absolute;
+  inset: 0;
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+
+  /* Dumbbell lift illusion */
+  animation: dumbbellLift 10s ease-in-out infinite;
+
+  /* Gym cinematic grading */
+  filter:
+    brightness(0.75)
+    contrast(1.25)
+    saturate(1.2);
+
+  transform-origin: center;
+}
+
+@keyframes dumbbellLift {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  25% {
+    transform: scale(1.05) translateY(-8px);
+  }
+  50% {
+    transform: scale(1.1) translateY(6px);
+  }
+  75% {
+    transform: scale(1.06) translateY(-4px);
+  }
+  100% {
+    transform: scale(1.12) translateY(0);
+  }
+}
+
+/* ================= DARK GYM SHADOW ================= */
+
+.video-bg .overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(0,0,0,0.2), #050b1a 70%),
+    linear-gradient(to bottom, rgba(5,11,26,0.4), rgba(5,11,26,0.95));
+  z-index: 1;
+}
+
+/* ================= AI GRID OVERLAY (YOUR IMAGE STYLE) ================= */
+
+.video-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.25;
+  z-index: 2;
+  animation: gridDrift 30s linear infinite;
+}
+
+@keyframes gridDrift {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 200px 200px, 200px 200px; }
+}
+
+/* ================= POWER BREATH PULSE ================= */
+
+.video-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(99,102,241,0.18),
+    transparent 65%
+  );
+  animation: powerBreath 4s ease-in-out infinite;
+  z-index: 2;
+}
+
+@keyframes powerBreath {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+
+/* ================= CONTENT FOCUS ================= */
+
+.welcome-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  animation: riseIn 1.5s ease-out forwards;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= BUTTON ENERGY ================= */
+
+.welcome-btn {
+  background: linear-gradient(135deg, #60a5fa, #8b5cf6);
+  box-shadow: 0 0 30px rgba(99,102,241,0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.welcome-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 50px rgba(99,102,241,0.9);
+}
+/* ================= TIPS TAB ================= */
+
+.tips-container {
+  margin-top: 30px;
+  display: grid;
+  gap: 24px;
+}
+
+/* ---- Hero Tip ---- */
+.tip-hero {
+  background: linear-gradient(135deg, #1e293b, #020617);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 0 40px rgba(99,102,241,0.25);
+}
+
+.tip-hero h3 {
+  color: #60a5fa;
+  margin-bottom: 10px;
+}
+
+.tip-hero p {
+  color: #cbd5f5;
+  line-height: 1.6;
+}
+
+.tip-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+}
+
+.tip-actions button {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tip-actions button:hover {
+  background: rgba(99,102,241,0.25);
+}
+
+.tips-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* ---- Tip Card ---- */
+.tip-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.35s ease;
+  animation: fadeUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+.tip-card:hover {
+  transform: translateY(-8px);
+  background: rgba(99, 102, 241, 0.18);
+}
+
+/* ---- Text ---- */
+.tip-card h4 {
+  color: #a5b4fc;
+  margin-bottom: 8px;
+}
+
+.tip-card p {
+  color: #cbd5f5;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* ---- Tag ---- */
+.tip-tag {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.25);
+  color: #c7d2fe;
+}
+
+/* ---- Animation ---- */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ===== SCAN TAB ===== */
+
+#scan {
+  display: none; /* hidden by default */
+}
+
+.scan-card {
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  text-align: center;
+}
+
+.scan-btn {
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #60a5fa, #8b5cf6);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(99,102,241,0.6);
+}
+
+.scan-hint {
+  margin-top: 14px;
+  color: #cbd5f5;
+  font-size: 0.9rem;
 }
