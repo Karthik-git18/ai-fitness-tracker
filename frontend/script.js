@@ -409,60 +409,39 @@ async function loadSupplements() {
     `;
   });
 }
-console.log("✅ script.js loaded");
+/* ---------- TIPS ---------- */
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ DOM loaded");
-  loadTips();
-});
-
-const TIPS = [
-  {
-    title: "🔥 Fat Loss Tip",
-    description: "Walk 7–10k steps daily and keep protein high.",
-    tag: "Weight Loss",
-  },
-  {
-    title: "💪 Muscle Gain Tip",
-    description: "Progressive overload + enough protein builds muscle.",
-    tag: "Muscle Gain",
-  },
-  {
-    title: "🥗 Diet Tip",
-    description: "Choose complex carbs instead of refined sugar.",
-    tag: "Nutrition",
-  },
-  {
-    title: "🧠 Recovery Tip",
-    description: "Sleep 7–9 hours daily for muscle recovery.",
-    tag: "Recovery",
-  }
-];
-
-function loadTips() {
+async function loadTips() {
   const container = document.getElementById("tipsContainer");
+  if (!container) return;
 
-  if (!container) {
-    console.error("❌ tipsContainer not found");
-    return;
+  container.innerHTML = "<p>Loading tips...</p>";
+
+  try {
+    const response = await fetch(
+      "https://ai-fitness-tracker-6pmo.onrender.com/tips"
+    );
+
+    if (!response.ok) {
+      throw new Error("HTTP status " + response.status);
+    }
+
+    const tips = await response.json();
+
+    container.innerHTML = "";
+    tips.forEach(tip => {
+      container.innerHTML += `
+        <div class="tip-card">
+          <h4>🔥 Fitness Tip</h4>
+          <p>${tip}</p>
+        </div>
+      `;
+    });
+
+  } catch (error) {
+    console.error("Tips fetch failed:", error);
+    container.innerHTML = "<p>Failed to load tips</p>";
   }
-
-  console.log("✅ tipsContainer found");
-
-  container.innerHTML = "";
-
-  TIPS.forEach((tip) => {
-    const card = document.createElement("div");
-    card.className = "tip-card";
-
-    card.innerHTML = `
-      <h4>${tip.title}</h4>
-      <p>${tip.description}</p>
-      <span class="tip-tag">${tip.tag}</span>
-    `;
-
-    container.appendChild(card);
-  });
 }
 /* ---------- AI CHAT ---------- */
 function addMessage(text, type) {
