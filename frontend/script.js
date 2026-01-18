@@ -1,4 +1,5 @@
-const API = "http://localhost:5000";
+
+const API_BASE = "https://ai-fitness-tracker-6pmo.onrender.com";
 
 let user = JSON.parse(localStorage.getItem("userProfile"));
 let onboarded = localStorage.getItem("onboardingCompleted") === "true";
@@ -238,8 +239,7 @@ async function scanFood() {
   resultDiv.innerHTML = "Scanning...";
 
   try {
-    const res = await fetch("http://127.0.0.1:5000/scan-food", {
-      method: "POST",
+   const res = await fetch(`${API}/scan-food`, {
       headers: {
         "Content-Type": "application/json",
       },
