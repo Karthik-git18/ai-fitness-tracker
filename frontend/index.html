@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Fitness Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <button onclick="tab('home')">Home</button>
+  <button onclick="tab('diet')">Diet</button>
+  <button onclick="tab('scan')">Scan</button>
+  <button onclick="tab('workout')">Workout</button>
+  <button onclick="tab('supplements')">Supplements</button>
+  <button onclick="tab('tips')">Tips</button>
+  <button onclick="tab('ai')">AI Chat</button>
+  <button onclick="tab('profile')">Profile</button>
+</nav>
+<!-- ================= ONBOARDING (FIRST TIME ONLY) ================= -->
+<section id="onboarding" class="card">
+  <h2>Welcome! Tell us about you</h2>
+
+  <input id="obName" placeholder="Name">
+  <input id="obAge" type="number" placeholder="Age">
+  <input id="obWeight" type="number" placeholder="Weight (kg)">
+  <input id="obHeight" type="number" placeholder="Height (cm)">
+
+  <select id="obGender">
+    <option value="">Select Gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+  </select>
+
+  <select id="obGoal">
+    <option value="">Select Goal</option>
+    <option value="Weight Loss">Weight Loss</option>
+    <option value="Maintain">Maintain</option>
+    <option value="Muscle Gain">Muscle Gain</option>
+  </select>
+
+  <button onclick="completeOnboarding()">Continue</button>
+</section>
+
+<!-- ================= PROFILE (FIRST SCREEN) ================= -->
+<section id="profile" class="tab">
+
+  <!-- ================= PROFILE HEADER ================= -->
+ <div class="profile-header">
+  <div class="avatar" onclick="document.getElementById('photoInput').click()">
+    <img id="profilePhoto" />
+    <span id="avatarIcon">👤</span>
+  </div>
+
+  <div>
+    <h2 id="profileName">Your Name</h2>
+    <span id="profileGoal" class="goal-badge">Goal</span>
+  </div>
+</div>
+
+<input type="file" id="photoInput" accept="image/*" hidden>
+  <!-- ================= STATS CARDS ================= -->
+  <div class="profile-stats">
+    <div class="stat-card">
+      <h4>Age</h4>
+      <span id="profileAge">0</span>
+    </div>
+
+    <div class="stat-card">
+      <h4>Weight</h4>
+      <span id="profileWeight">0 kg</span>
+    </div>
+
+    <div class="stat-card">
+      <h4>Height</h4>
+      <span id="profileHeight">0 cm</span>
+    </div>
+
+    <div class="stat-card">
+      <h4>BMI</h4>
+      <span id="profileBMI">0</span>
+    </div>
+  </div>
+
+ 
+  <!-- ================= EDIT PROFILE ================= -->
+  <div class="profile-edit">
+    <h3>Edit Profile</h3>
+
+    <input id="nameInput" placeholder="Name">
+    <input id="ageInput" type="number" placeholder="Age">
+    <input id="weightInput" type="number" placeholder="Weight (kg)">
+    <input id="heightInput" type="number" placeholder="Height (cm)">
+
+    <select id="goalInput">
+      <option value="">Select Goal</option>
+      <option value="Weight Loss">Weight Loss</option>
+      <option value="Maintain">Maintain</option>
+      <option value="Muscle Gain">Muscle Gain</option>
+    </select>
+
+    <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+  </div>
+
+</section>
+
+<!-- ================= HOME ================= -->
+<section id="home" class="tab">
+  <h2>Daily Overview</h2>
+
+  <div class="rings">
+    <div class="ring" id="calRing">
+      <span id="calText"></span>
+      <p>Calories</p>
+    </div>
+
+    <div class="ring" id="proRing">
+      <span id="proText"></span>
+      <p>Protein (g)</p>
+    </div>
+
+    <div class="ring" id="waterRing">
+      <span id="waterText"></span>
+      <p>Water (L)</p>
+    </div>
+  </div>
+
+  <h3>Weekly Workout Plan</h3>
+  <ul id="weeklyWorkout"></ul>
+</section>
+
+<!-- ================= DIET ================= -->
+<section id="diet" class="tab">
+
+  <h2 class="diet-title">🥗 Your Diet Plan</h2>
+  <p class="diet-subtitle">
+    Personalized meals based on your goal & nutrition data
+  </p>
+
+  <div class="diet-summary">
+    <div class="summary-card">
+      <p>Calories</p>
+      <h3 id="dietCalories">0 kcal</h3>
+    </div>
+
+    <div class="summary-card">
+      <p>Protein</p>
+      <h3 id="dietProtein">0 g</h3>
+    </div>
+  </div>
+
+  <div id="dietMeals"></div>
+
+</section>
+
+<!-- ================= SCAN ================= -->
+<section id="scan" class="tab">
+  <h2 class="section-title">📷 Scan Food</h2>
+  <p class="section-sub">Enter food name or scan image</p>
+
+  <div class="scan-box">
+    <input id="scanFoodInput" placeholder="e.g. egg, rice, apple" />
+    <button onclick="scanFood()">Scan</button>
+  </div>
+
+  <div id="scanResult" class="scan-result"></div>
+</section>
+<!-- ================= WORKOUT ================= -->
+<section id="workout" class="tab">
+
+  <h2 class="section-title">🏋️ Weekly Workout Plan</h2>
+  <p class="section-sub">Personalized for your goal</p>
+
+  <div id="workoutGrid" class="workout-grid"></div>
+
+</section>
+
+<!-- ================= SUPPLEMENTS ================= -->
+<section id="supplements" class="tab">
+
+  <h2 class="section-title">💊 Recommended Supplements</h2>
+  <p class="section-sub">Based on your fitness goal</p>
+
+  <div id="supplementsGrid" class="supplements-grid"></div>
+
+</section>
+
+
+<!-- ================= TIPS TAB ================= -->
+<section id="tips" class="tab">
+  <h2 class="tips-title">🔥 Explore Fitness Tips</h2>
+  <p class="tips-subtitle">Expert-curated tips to improve your health</p>
+
+  <!-- REQUIRED -->
+  <div id="tipsContainer" class="tips-container"></div>
+</section>
+
+<!-- ================= AI CHAT ================= -->
+<section id="ai" class="tab">
+
+  <div class="ai-header">
+    🤖 AI Fitness Coach
+  </div>
+
+  <!-- Quick Suggestions -->
+  <div class="ai-suggestions">
+    <button onclick="quickAsk('calories')">Calories</button>
+    <button onclick="quickAsk('protein')">Protein</button>
+    <button onclick="quickAsk('workout')">Workout</button>
+    <button onclick="quickAsk('motivation')">Motivation</button>
+  </div>
+
+  <!-- Chat Box -->
+  <div id="chatBox" class="chat-box"></div>
+
+  <!-- Input Bar -->
+  <div class="ai-input">
+    <input id="aiInput" placeholder="Ask your fitness coach..." />
+    <button onclick="sendAI()">Send</button>
+  </div>
+
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
