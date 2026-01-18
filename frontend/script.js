@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:5000";
+const API = "https://ai-fitness-tracker-6pmo.onrender.com";
 
 let user = JSON.parse(localStorage.getItem("userProfile"));
 let onboarded = localStorage.getItem("onboardingCompleted") === "true";
